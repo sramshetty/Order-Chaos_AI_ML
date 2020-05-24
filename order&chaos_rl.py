@@ -14,6 +14,8 @@ where it basically has a single path that it wants to take to reach a winning st
 by the opponent, the values will then usually all become 0.5 and the player is effectively moving randomly.
 Created by Wesley Tansey
 1/21/2013
+Edited to Order and Chaos by Shivaen Ramshetty
+5/24/2020
 Code released under the MIT license.
 """
 
@@ -27,30 +29,46 @@ PLAYER_X = 1
 PLAYER_O = 2
 DRAW = 3
 
-BOARD_FORMAT = "----------------------------\n| {0} | {1} | {2} |\n|--------------------------|\n| {3} | {4} | {5} |\n|--------------------------|\n| {6} | {7} | {8} |\n----------------------------"
+BOARD_FORMAT = "--------------------------------------------------------\n| {0} | {1} | {2} | {3} | {4} | {5} |\n|------------------------------------------------------\n| {6} | {7} | {8} | {9} | {10} | {11} |\n|------------------------------------------------------\n| {12} | {13} | {14} | {15} | {16} | {17} |\n|--------------------------------------------------------\n| {18} | {19} | {20} | {21} | {22} | {23} |\n|--------------------------------------------------------\n| {24} | {25} | {26} | {27} | {28} | {29} |\n|--------------------------------------------------------\n| {30} | {31} | {32} | {33} | {34} | {35} |\n|--------------------------------------------------------"
 NAMES = [' ', 'X', 'O']
 def printboard(state):
     cells = []
-    for i in range(3):
-        for j in range(3):
+    for i in range(6):
+        for j in range(6):
             cells.append(NAMES[state[i][j]].center(6))
     print(BOARD_FORMAT.format(*cells))
 
 def emptystate():
-    return [[EMPTY,EMPTY,EMPTY],[EMPTY,EMPTY,EMPTY],[EMPTY,EMPTY,EMPTY]]
+    return [[EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY],[EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY],[EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY],[EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY],[EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY],[EMPTY,EMPTY,EMPTY,EMPTY,EMPTY,EMPTY]]
 
 def gameover(state):
     for i in range(6):
-        if state[i][0] != EMPTY and state[i][0] == state[i][1] and state[i][0] == state[i][2] and state:
+        if state[i][0] != EMPTY and state[i][0] == state[i][1] and state[i][0] == state[i][2] and state[i][0] == state[i][3] and state[i][0] == state[i][4]:
             return state[i][0]
-        if state[0][i] != EMPTY and state[0][i] == state[1][i] and state[0][i] == state[2][i]:
+        if state[i][1] != EMPTY and state[i][1] == state[i][2] and state[i][1] == state[i][3] and state[i][1] == state[i][4] and state[i][1] == state[i][5]:
+            return state[i][1]
+        if state[0][i] != EMPTY and state[0][i] == state[1][i] and state[0][i] == state[2][i] and state[0][i] == state[3][i] and state[0][i] == state[4][i]:
             return state[0][i]
-    if state[0][0] != EMPTY and state[0][0] == state[1][1] and state[0][0] == state[2][2]:
+        if state[1][i] != EMPTY and state[1][i] == state[2][i] and state[1][i] == state[3][i] and state[1][i] == state[4][i] and state[1][i] == state[5][i]:
+            return state[1][i]
+    if state[0][0] != EMPTY and state[0][0] == state[1][1] and state[0][0] == state[2][2] and state[0][0] == state[3][3] and state[0][0] == state[4][4]:
         return state[0][0]
-    if state[0][2] != EMPTY and state[0][2] == state[1][1] and state[0][2] == state[2][0]:
-        return state[0][2]
-    for i in range(3):
-        for j in range(3):
+    if state[1][1] != EMPTY and state[1][1] == state[2][2] and state[1][1] == state[3][3] and state[1][1] == state[4][4] and state[1][1] == state[5][5]:
+        return state[1][1]
+    if state[1][0] != EMPTY and state[1][0] == state[2][1] and state[1][0] == state[3][2] and state[1][0] == state[4][3] and state[1][0] == state[5][4]:
+        return state[1][0]
+    if state[0][1] != EMPTY and state[0][1] == state[1][2] and state[0][1] == state[2][3] and state[0][1] == state[3][4] and state[0][1] == state[4][5]:
+        return state[0][1]
+    if state[0][5] != EMPTY and state[0][5] == state[1][4] and state[0][5] == state[2][3] and state[0][5] == state[3][2] and state[0][5] == state[4][1]:
+        return state[0][5]
+    if state[1][4] != EMPTY and state[1][4] == state[2][3] and state[1][4] == state[3][2] and state[1][4] == state[4][1] and state[1][4] == state[5][0]:
+        return state[1][4]
+    if state[0][4] != EMPTY and state[0][4] == state[1][3] and state[0][4] == state[2][2] and state[0][4] == state[3][1] and state[0][4] == state[4][0]:
+        return state[0][4]
+    if state[1][5] != EMPTY and state[1][5] == state[2][4] and state[1][5] == state[3][3] and state[1][5] == state[4][2] and state[1][5] == state[5][1]:
+        return state[1][5]
+    for i in range(6):
+        for j in range(6):
             if state[i][j] == EMPTY:
                 return EMPTY
     return DRAW
@@ -58,8 +76,8 @@ def gameover(state):
 def last_to_act(state):
     countx = 0
     counto = 0
-    for i in range(3):
-        for j in range(3):
+    for i in range(6):
+        for j in range(6):
             if state[i][j] == PLAYER_X:
                 countx += 1
             elif state[i][j] == PLAYER_O:
@@ -72,7 +90,7 @@ def last_to_act(state):
 
 
 def enumstates(state, idx, agent):
-    if idx > 8:
+    if idx > 35:
         player = last_to_act(state)
         if player == agent.player:
             agent.add(state)
@@ -80,9 +98,9 @@ def enumstates(state, idx, agent):
         winner = gameover(state)
         if winner != EMPTY:
             return
-        i = int(idx / 3)
-        j = int(idx % 3)
-        for val in range(3):
+        i = int(idx / 6)
+        j = int(idx % 6)
+        for val in range(6):
             state[i][j] = val
             enumstates(state, idx+1, agent)
 
@@ -121,8 +139,8 @@ class Agent(object):
 
     def random(self, state):
         available = []
-        for i in range(3):
-            for j in range(3):
+        for i in range(6):
+            for j in range(6):
                 if state[i][j] == EMPTY:
                     available.append((i,j))
         return random.choice(available)
@@ -132,8 +150,8 @@ class Agent(object):
         maxmove = None
         if self.verbose:
             cells = []
-        for i in range(3):
-            for j in range(3):
+        for i in range(6):
+            for j in range(6):
                 if state[i][j] == EMPTY:
                     state[i][j] = self.player
                     val = self.lookup(state)
@@ -178,10 +196,11 @@ class Agent(object):
     def printvalues(self):
         vals = deepcopy(self.values)
         for key in vals:
-            state = [list(key[0]),list(key[1]),list(key[2])]
+            print(key)
+            state = [list(key[0]),list(key[1]),list(key[2]), list(key[3]), list(key[4]), list(key[5])]
             cells = []
-            for i in range(3):
-                for j in range(3):
+            for i in range(6):
+                for j in range(6):
                     if state[i][j] == EMPTY:
                         state[i][j] = self.player
                         cells.append(str(self.lookup(state)).center(3))
@@ -191,7 +210,7 @@ class Agent(object):
             print(BOARD_FORMAT.format(*cells))
 
     def statetuple(self, state):
-        return (tuple(state[0]),tuple(state[1]),tuple(state[2]))
+        return (tuple(state[0]),tuple(state[1]),tuple(state[2]), tuple(state[3]), tuple(state[4]), tuple(state[5]))
 
     def log(self, s):
         if self.verbose:
@@ -214,7 +233,7 @@ class Human(object):
 
 def play(agent1, agent2):
     state = emptystate()
-    for i in range(9):
+    for i in range(36):
         if i % 2 == 0:
             move = agent1.action(state)
         else:
